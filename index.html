@@ -248,12 +248,19 @@
     <div class="bg-overlay"></div>
     <div class="real-time" id="real-time">00:00:00</div>
 
-    <audio id="rain" loop src="https://assets.mixkit.co/active_storage/sfx/2505/2505-preview.mp3"></audio>
+    <!-- <audio id="rain" loop src="https://assets.mixkit.co/active_storage/sfx/2505/2505-preview.mp3"></audio>
     <audio id="cafe" loop src="https://www.soundjay.com/misc/sounds/coffee-shop-1.mp3"></audio>
     <audio id="fireplace" loop src="https://www.soundjay.com/nature/sounds/fire-1.mp3"></audio>
     <audio id="night" loop src="https://www.soundjay.com/nature/sounds/crickets-chirping-01.mp3"></audio>
     <audio id="city" loop src="https://www.soundjay.com/misc/sounds/street-city-ambience-01.mp3"></audio>
-    <audio id="beep-sound" src="https://assets.mixkit.co/active_storage/sfx/951/951-preview.mp3"></audio>
+    <audio id="beep-sound" src="https://assets.mixkit.co/active_storage/sfx/951/951-preview.mp3"></audio> -->
+
+    <audio id="rain" loop src="./sounds/rain.mp3"></audio>
+    <audio id="cafe" loop src="./sounds/cafe.mp3"></audio>
+    <audio id="fireplace" loop src="./sounds/fireplace.mp3"></audio>
+    <audio id="night" loop src="./sounds/night.mp3"></audio>
+    <audio id="city" loop src="./sounds/city.mp3"></audio>
+    <audio id="beep-sound" src="./sounds/alert.mp3"></audio>
 
     <div class="timer-container">
         <div id="time" class="big-timer">00:00</div>
@@ -375,10 +382,25 @@
         // --- 3. Sound Logic ---
         function toggleSound(id, btn) {
             const audio = document.getElementById(id);
+            if (!audio.src && !audio.querySelector('source')) {
+                console.error("Error: ไม่พบไฟล์เสียงในแท็ก audio นี้");
+                return;
+            };
+
             if (audio.paused) { 
-                audio.play(); btn.textContent = 'Pause'; btn.style.background = '#ffcc00'; btn.style.color = '#333';
+                // ใช้ promise เพื่อดักจับ error ตอนเล่น
+                audio.play().then(() => {
+                    btn.textContent = 'Pause'; 
+                    btn.style.background = '#ffcc00'; 
+                    btn.style.color = '#333';
+                }).catch(error => {
+                    console.log("Playback failed:", error);
+                });
             } else { 
-                audio.pause(); btn.textContent = 'Play'; btn.style.background = 'rgba(255,255,255,0.2)'; btn.style.color = '#fff';
+                audio.pause(); 
+                btn.textContent = 'Play'; 
+                btn.style.background = 'rgba(255,255,255,0.2)'; 
+                btn.style.color = '#fff';
             }
         }
         function setVolume(id, vol) { document.getElementById(id).volume = vol; }
@@ -432,6 +454,7 @@
                         content.appendChild(dot);
                     });
                 }
+                
 
                 dayEl.onclick = () => openModal(dateKey);
                 grid.appendChild(dayEl);
@@ -459,11 +482,46 @@
 
         function updateModalTaskList() {
             const list = document.getElementById('modalTaskList');
-            list.innerHTML = '';
-            if(tasks[selectedDateStr]) {
+            list.innerHTML = ''; // ล้างรายการเก่าออก
+            
+            if (tasks[selectedDateStr] && tasks[selectedDateStr].length > 0) {
                 tasks[selectedDateStr].forEach((t, i) => {
-                    list.innerHTML += `<div>- ${t}</div>`;
+                    const taskItem = document.createElement('div');
+                    taskItem.style.display = 'flex';
+                    taskItem.style.justifyContent = 'space-between';
+                    taskItem.style.alignItems = 'center';
+                    taskItem.style.marginBottom = '5px';
+                    taskItem.style.background = 'rgba(255,255,255,0.1)';
+                    taskItem.style.padding = '5px 10px';
+                    taskItem.style.borderRadius = '5px';
+
+                    taskItem.innerHTML = `
+                        <span>- ${t}</span>
+                        <button onclick="deleteTask(${i})" style="background:#ff4444; color:white; border:none; border-radius:3px; padding:2px 8px; cursor:pointer; font-size:12px;">ลบ</button>
+                    `;
+                    list.appendChild(taskItem);
                 });
+            } else {
+                list.innerHTML = '<div style="color:gray; font-size:14px;">ไม่มีงานสำหรับวันนี้</div>';
+            }
+        }
+
+       function deleteTask(index) {
+            if (confirm('คุณต้องการลบงานนี้ใช่หรือไม่?')) {
+                // 1. ลบจาก Array
+                tasks[selectedDateStr].splice(index, 1);
+                
+                // 2. ถ้าลบจนหมด ให้ลบ Key นั้นทิ้งไปเลย (สำคัญมาก)
+                if (tasks[selectedDateStr].length === 0) {
+                    delete tasks[selectedDateStr];
+                }
+                
+                // 3. เซฟลง LocalStorage ทันที
+                localStorage.setItem('studyCalendarTasks', JSON.stringify(tasks));
+                
+                // 4. อัปเดตหน้าจอ Modal และ **สั่งวาดปฏิทินใหม่**
+                updateModalTaskList(); 
+                renderCalendar(); // <--- บรรทัดนี้จะทำให้สีหรือจุดที่เคยมีหายไป
             }
         }
 
