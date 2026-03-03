@@ -3,236 +3,342 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Study With Me - Cozy Space</title>
-    <link href="https://fonts.googleapis.com/css2?family=Mali:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <title>Study With Me - Studyhub</title>
+    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Mali', cursive;
+            font-family: 'Prompt', sans-serif;
         }
 
+        /* --- Welcome Screen --- */
+        #intro-screen {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: #ffffff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: opacity 1s ease, visibility 1s;
+        }
+        #intro-screen h1 {
+            color: #333;
+            font-size: 3.5rem;
+            font-weight: 700;
+            letter-spacing: 2px;
+            animation: fadeInOut 2.5s ease-in-out;
+        }
+
+        @keyframes fadeInOut {
+            0% { opacity: 0; transform: translateY(20px); }
+            30% { opacity: 1; transform: translateY(0); }
+            80% { opacity: 1; transform: translateY(0); }
+            100% { opacity: 0; transform: translateY(-20px); }
+        }
+
+        /* --- Main Background --- */
         body {
-            background-image: url('https://cdnb.artstation.com/p/assets/images/images/016/596/409/original/fernando-henrique-lofi-animation.gif?1552749455');
+            background-image: url('https://static1.squarespace.com/static/5fe4caeadae61a2f19719512/t/6696219ad6dcda40f9fa8ab6/1721115042117/16.gif?format=1500w');
             background-size: cover;
             background-position: center;
             background-attachment: fixed;
-            display: flex;
-            flex-direction: column;
-            height: 100vh;
             color: #fff;
             overflow: hidden;
-        }
-
-        /* --- Timer Zone --- */
-        .timer-wrapper {
-            flex: 1;
+            height: 100vh;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            text-align: center;
-            margin-top: -40px;
         }
 
-        .set-time-zone {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin-bottom: 20px;
-            background: rgba(255, 255, 255, 0.15);
-            padding: 10px 20px;
-            border-radius: 30px;
-            backdrop-filter: blur(5px);
-        }
-
-        .set-time-input {
-            width: 60px;
-            padding: 5px 10px;
-            border-radius: 15px;
-            border: 2px solid #ffcc00;
-            text-align: center;
-            font-size: 1rem;
-            background: #fff;
-            color: #333;
-            outline: none;
-            font-weight: 600;
-        }
-
-        .btn-set {
-            background: #ffcc00;
-            color: #444;
-            padding: 5px 15px;
-            border: none;
-            border-radius: 25px;
-            cursor: pointer;
-            font-weight: 600;
-            transition: 0.3s;
-        }
-
-        .timer-display {
-            font-size: 14rem;
-            font-weight: 600;
-            line-height: 1;
-            letter-spacing: 5px;
-            text-shadow: 0 0 30px rgba(0,0,0,0.6);
-            transition: color 0.5s ease;
-        }
-
-        /* เอฟเฟกต์กะพริบตอนหมดเวลา */
-        @keyframes blink {
-            50% { opacity: 0.5; }
-        }
-        .timer-blink {
-            animation: blink 1s linear infinite;
-        }
-
-        .timer-controls {
-            display: flex;
-            gap: 10px;
-            margin-top: 20px;
-        }
-
-        .timer-controls button {
-            padding: 10px 25px;
-            border: none;
-            border-radius: 25px;
-            background: rgba(255, 255, 255, 0.9);
-            color: #333;
-            font-size: 1rem;
-            cursor: pointer;
-            transition: 0.3s;
-        }
-
-        .timer-controls button:hover, .btn-set:hover { background: #fff; transform: scale(1.05); }
-
-        /* --- To-Do List (ซ้ายกลาง) --- */
-        .todo-paper {
+        .bg-overlay {
             position: fixed;
-            left: 40px;
-            top: 50%;
-            transform: translateY(-50%) rotate(-1deg);
-            background: #fffbe6;
-            color: #444;
-            padding: 25px;
-            width: 320px;
-            min-height: 300px;
-            box-shadow: 8px 8px 20px rgba(0,0,0,0.3);
-            border-radius: 5px;
-            z-index: 10;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.3);
+            z-index: -1;
         }
 
-        .todo-paper::before {
-            content: '';
-            position: absolute;
-            top: -15px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 100px;
-            height: 35px;
-            background: rgba(255, 255, 255, 0.7);
-            backdrop-filter: blur(2px);
-        }
-
-        .todo-paper h2 { font-size: 1.4rem; margin-bottom: 15px; border-bottom: 2px dashed #e0e0e0; padding-bottom: 5px; }
-        .todo-input-group { display: flex; gap: 8px; margin-bottom: 15px; }
-        .todo-input-group input { flex: 1; border: 1px solid #e0e0e0; padding: 10px; border-radius: 10px; outline: none; background: #fff; }
-        .todo-input-group button { background: #ffcc00; color: #444; border: none; padding: 0 15px; border-radius: 10px; cursor: pointer; font-weight: 600; }
-        #taskList { list-style: none; max-height: 200px; overflow-y: auto; }
-        li { display: flex; align-items: center; gap: 10px; padding: 10px 0; border-bottom: 1px solid #f9f9f9; }
-        .custom-checkbox { width: 22px; height: 22px; border: 2px solid #ccc; border-radius: 6px; cursor: pointer; background: #fff; }
-        li.completed .custom-checkbox { background: #6ab04c; border-color: #6ab04c; position: relative; }
-        li.completed .custom-checkbox::after { content: '✓'; color: #fff; font-size: 14px; position: absolute; top: -2px; left: 3px; }
-        li.completed .todo-text { text-decoration: line-through; opacity: 0.5; }
-        .todo-text { flex: 1; cursor: pointer; font-size: 1rem; color: #555; }
-        .del-item-btn { background: #ffeaa7; border: none; color: #d63031; width: 25px; height: 25px; border-radius: 50%; cursor: pointer; font-size: 0.8rem; }
-
-        /* --- Sound Zone (ขวาบน) --- */
-        .sound-zone {
+        /* --- Real Time Display --- */
+        .real-time {
             position: fixed;
             top: 30px;
-            right: 30px;
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-            z-index: 10;
+            font-size: 1.5rem;
+            font-weight: 500;
+            letter-spacing: 2px;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.5);
         }
 
-        .sound-item { 
-            display: flex; align-items: center; justify-content: flex-end; gap: 12px; 
-            background: rgba(0, 0, 0, 0.3); padding: 8px 15px; border-radius: 20px;
+        /* --- Center Pomodoro Timer --- */
+        .timer-container {
+            text-align: center;
+            transform: translateY(-20px);
+        }
+        .big-timer {
+            font-size: 10rem;
+            font-weight: 700;
+            line-height: 1;
+            letter-spacing: 5px;
+            text-shadow: 0 10px 30px rgba(0,0,0,0.6);
+            margin-bottom: 10px;
+        }
+        
+        .timer-input-box {
+            margin-bottom: 20px;
+        }
+        .timer-input-box input {
+            background: rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255,255,255,0.4);
             backdrop-filter: blur(5px);
+            color: #fff;
+            width: 100px;
+            padding: 8px;
+            border-radius: 10px;
+            text-align: center;
+            font-size: 1.2rem;
+            outline: none;
+        }
+        .timer-input-box input::placeholder { color: rgba(255,255,255,0.6); }
+
+        .timer-main-controls {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+        }
+        .timer-main-controls button {
+            background: rgba(255, 255, 255, 0.9);
+            color: #333;
+            border: none;
+            padding: 10px 25px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: 0.3s;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+        .timer-main-controls button:hover {
+            transform: scale(1.05) translateY(-3px);
+            background: #ffcc00;
         }
 
-        .sound-name { font-size: 0.9rem; font-weight: 500; text-shadow: 1px 1px 2px rgba(0,0,0,0.8); }
-        .sound-zone button { background: #fff; color: #333; padding: 4px 12px; font-size: 0.75rem; border-radius: 10px; border: none; width: 60px; cursor: pointer; font-weight: 600; }
-        .sound-zone input[type="range"] { width: 70px; height: 4px; accent-color: #ffcc00; cursor: pointer; }
-
-        /* --- Real-time Clock (ด้านล่าง) --- */
-        .real-clock {
+        /* --- Bottom Icons Area --- */
+        .bottom-bar {
             position: fixed;
-            bottom: 60px;
+            bottom: 40px;
             left: 50%;
             transform: translateX(-50%);
-            font-size: 1.8rem;
-            opacity: 0.9;
-            letter-spacing: 3px;
-            text-shadow: 2px 2px 10px rgba(0,0,0,0.7);
-            font-weight: 500;
+            display: flex;
+            gap: 25px;
+            z-index: 100;
         }
 
-        #taskList::-webkit-scrollbar { width: 4px; }
-        #taskList::-webkit-scrollbar-thumb { background: #ddd; border-radius: 10px; }
+        .icon-btn {
+            background: rgba(30, 30, 30, 0.6);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.2);
+            width: 55px; height: 55px;
+            border-radius: 50%;
+            display: flex; justify-content: center; align-items: center;
+            cursor: pointer;
+            color: #fff;
+            transition: all 0.3s;
+        }
+        .icon-btn:hover {
+            background: rgba(255, 255, 255, 0.9);
+            color: #333;
+            transform: scale(1.1);
+        }
+        .icon-btn svg { width: 26px; height: 26px; stroke: currentColor; fill: none; stroke-width: 2;}
+
+        /* --- Panels --- */
+        .panel {
+            position: fixed;
+            background: rgba(30, 30, 30, 0.85);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 20px;
+            padding: 20px;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            z-index: 90;
+        }
+        .panel.active { opacity: 1; visibility: visible; }
+        .panel h3 { margin-bottom: 15px; font-size: 1.2rem; text-align: center; border-bottom: 1px solid rgba(255,255,255,0.2); padding-bottom: 10px; color: #fff;}
+
+        /* Sound Panel */
+        #sound-panel {
+            bottom: 110px;
+            left: 50%;
+            transform: translateX(-50%) translateY(20px);
+            width: 320px;
+        }
+        #sound-panel.active { transform: translateX(-50%) translateY(0); }
+        .sound-item { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; color: #fff; }
+        .sound-item span { flex: 1; font-size: 0.9rem; display: flex; align-items: center; gap: 8px; }
+        .sound-item button { background: rgba(255,255,255,0.2); color: #fff; border: none; padding: 5px 10px; border-radius: 8px; cursor: pointer; font-size: 0.8rem; }
+        .sound-item input[type="range"] { width: 70px; accent-color: #ffcc00; }
+
+        /* Calendar Panel */
+        #todo-panel {
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%) scale(0.9);
+            width: 850px; max-width: 95vw;
+            background: #fff;
+            color: #333;
+            padding: 30px;
+        }
+        #todo-panel.active { transform: translate(-50%, -50%) scale(1); }
+        
+        .calendar-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 1px;
+            background: #eee;
+            border: 1px solid #eee;
+        }
+        .calendar-day-head { background: #f8f9fa; padding: 10px; text-align: center; font-weight: 600; font-size: 0.8rem; }
+        .calendar-day {
+            background: #fff;
+            min-height: 100px;
+            padding: 5px;
+            display: flex;
+            flex-direction: column;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .calendar-day:hover { background: #fffdeb; }
+        .calendar-day.today { background: #fff4cc; }
+        .day-number { font-size: 0.9rem; font-weight: 600; margin-bottom: 5px; }
+        .day-content { font-size: 0.7rem; overflow-y: auto; flex: 1; }
+        .task-dot { background: #ffcc00; margin-bottom: 2px; padding: 2px 4px; border-radius: 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+        /* Task Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.5);
+            justify-content: center;
+            align-items: center;
+        }
+        .modal-content {
+            background: #fff;
+            padding: 20px;
+            border-radius: 15px;
+            width: 300px;
+            color: #333;
+        }
+        .modal-content input { width: 100%; padding: 10px; margin: 10px 0; border: 1px solid #ddd; border-radius: 8px; }
+        .modal-btns { display: flex; gap: 10px; }
+        .modal-btns button { flex: 1; padding: 8px; border-radius: 8px; cursor: pointer; border: none; font-weight: 600; }
     </style>
 </head>
 <body>
 
-    <div class="sound-zone">
-        <div class="sound-item">
-            <span class="sound-name">Rainy Day</span>
-            <button onclick="toggleSound('rain', this)">Play</button>
-            <input type="range" id="rain-vol" min="0" max="1" step="0.1" value="0.7" onchange="setVolume('rain', this.value)">
-        </div>
-        <div class="sound-item">
-            <span class="sound-name">Window Rain</span>
-            <button onclick="toggleSound('cafe', this)">Play</button>
-            <input type="range" id="cafe-vol" min="0" max="1" step="0.1" value="0.7" onchange="setVolume('cafe', this.value)">
-        </div>
-        <audio id="rain" loop src="https://assets.mixkit.co/active_storage/sfx/2505/2505-preview.mp3"></audio>
-        <audio id="cafe" loop src="https://assets.mixkit.co/active_storage/sfx/2506/2506-preview.mp3"></audio>
-        <audio id="beep-sound" src="https://assets.mixkit.co/active_storage/sfx/951/951-preview.mp3"></audio>
+    <div id="intro-screen">
+        <h1>Welcome to studyhub</h1>
     </div>
 
-    <div class="timer-wrapper">
-        <div class="set-time-zone">
-            <span style="font-size: 0.9rem; opacity: 0.8;">Set Mins:</span>
-            <input type="number" id="customMinutes" class="set-time-input" value="25" min="1">
-            <button class="btn-set" onclick="setTimer()">Set</button>
+    <div class="bg-overlay"></div>
+    <div class="real-time" id="real-time">00:00:00</div>
+
+    <audio id="rain" loop src="https://assets.mixkit.co/active_storage/sfx/2505/2505-preview.mp3"></audio>
+    <audio id="cafe" loop src="https://www.soundjay.com/misc/sounds/coffee-shop-1.mp3"></audio>
+    <audio id="fireplace" loop src="https://www.soundjay.com/nature/sounds/fire-1.mp3"></audio>
+    <audio id="night" loop src="https://www.soundjay.com/nature/sounds/crickets-chirping-01.mp3"></audio>
+    <audio id="city" loop src="https://www.soundjay.com/misc/sounds/street-city-ambience-01.mp3"></audio>
+    <audio id="beep-sound" src="https://assets.mixkit.co/active_storage/sfx/951/951-preview.mp3"></audio>
+
+    <div class="timer-container">
+        <div id="time" class="big-timer">00:00</div>
+        
+        <div class="timer-input-box">
+            <input type="number" id="manualMinutes" placeholder="นาที" onchange="setTimerManual()">
         </div>
 
-        <div class="timer-display" id="time">25:00</div>
-
-        <div class="timer-controls">
+        <div class="timer-main-controls">
             <button onclick="startTimer()">Start</button>
             <button onclick="pauseTimer()">Pause</button>
-            <button onclick="resetTimer()">Reset</button>
+            <button onclick="finishTimer()">Finish</button>
         </div>
     </div>
 
-    <div class="todo-paper">
-        <h2>To-do List</h2>
-        <div class="todo-input-group">
-            <input type="text" id="taskInput" placeholder="Add a task..." onkeypress="handleKeyPress(event)">
-            <button onclick="addTask()">Add</button>
+    <div id="sound-panel" class="panel">
+        <h3>ตั้งค่าเสียง</h3>
+        <div class="sound-item">
+            <span>🌧️ ฝนตก</span>
+            <button onclick="toggleSound('rain', this)">Play</button>
+            <input type="range" min="0" max="1" step="0.1" value="0.5" onchange="setVolume('rain', this.value)">
         </div>
-        <ul id="taskList"></ul>
+        <div class="sound-item">
+            <span>🔥 เตาผิง</span>
+            <button onclick="toggleSound('fireplace', this)">Play</button>
+            <input type="range" min="0" max="1" step="0.1" value="0.5" onchange="setVolume('fireplace', this.value)">
+        </div>
+        <div class="sound-item">
+            <span>☕ ร้านกาแฟ</span>
+            <button onclick="toggleSound('cafe', this)">Play</button>
+            <input type="range" min="0" max="1" step="0.1" value="0.5" onchange="setVolume('cafe', this.value)">
+        </div>
+        <div class="sound-item">
+            <span>🌙 ตอนดึก</span>
+            <button onclick="toggleSound('night', this)">Play</button>
+            <input type="range" min="0" max="1" step="0.1" value="0.5" onchange="setVolume('night', this.value)">
+        </div>
+        <div class="sound-item">
+            <span>🏙️ เมือง</span>
+            <button onclick="toggleSound('city', this)">Play</button>
+            <input type="range" min="0" max="1" step="0.1" value="0.5" onchange="setVolume('city', this.value)">
+        </div>
     </div>
 
-    <div class="real-clock" id="current-clock">00:00:00</div>
+    <div id="todo-panel" class="panel">
+        <div class="calendar-header">
+            <button onclick="prevMonth()"><</button>
+            <h2 id="monthDisplay">Month Year</h2>
+            <button onclick="nextMonth()">></button>
+        </div>
+        <div class="calendar-grid" id="calendarGrid"></div>
+    </div>
+
+    <div id="taskModal" class="modal">
+        <div class="modal-content">
+            <h4 id="modalDate">วันที่</h4>
+            <input type="text" id="modalTaskInput" placeholder="เพิ่มงานที่ต้องทำ...">
+            <div id="modalTaskList" style="max-height: 100px; overflow-y: auto; margin-bottom: 10px; font-size: 0.8rem;"></div>
+            <div class="modal-btns">
+                <button style="background: #ffcc00;" onclick="saveTask()">เพิ่ม</button>
+                <button style="background: #eee;" onclick="closeModal()">ปิด</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="bottom-bar">
+        <button class="icon-btn" onclick="togglePanel('todo-panel')" title="ปฏิทิน">
+            <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+        </button>
+
+        <button class="icon-btn" onclick="togglePanel('sound-panel')" title="เสียงบรรยากาศ">
+            <svg viewBox="0 0 24 24"><path d="M9 18V5l12-2v13"></path><circle cx="6" cy="18" r="3"></circle><circle cx="18" cy="16" r="3"></circle></svg>
+        </button>
+    </div>
 
     <script>
-        let timeLeft = 25 * 60;
+        // --- 1. Real Time Clock ---
+        function updateClock() {
+            const now = new Date();
+            document.getElementById('real-time').textContent = now.toLocaleTimeString('th-TH');
+        }
+        setInterval(updateClock, 1000);
+
+        // --- 2. Timer Logic (Manual Input) ---
+        let timeLeft = 0;
         let timerInterval;
         let isRunning = false;
 
@@ -242,96 +348,144 @@
             document.getElementById('time').textContent = `${min.toString().padStart(2, '0')}:${sec.toString().padStart(2, '0')}`;
         }
 
-        function setTimer() {
-            const minInput = document.getElementById('customMinutes').value;
-            if (minInput > 0) {
+        function setTimerManual() {
+            const min = document.getElementById('manualMinutes').value;
+            if(min > 0) {
                 pauseTimer();
-                timeLeft = minInput * 60;
-                document.getElementById('time').style.color = '#fff';
-                document.getElementById('time').classList.remove('timer-blink');
+                timeLeft = min * 60;
                 updateDisplay();
             }
         }
 
         function startTimer() {
-            if (isRunning) return;
+            if (isRunning || timeLeft === 0) return;
             isRunning = true;
-            document.getElementById('time').style.color = '#fff';
-            document.getElementById('time').classList.remove('timer-blink');
-            
             timerInterval = setInterval(() => {
-                if (timeLeft > 0) { 
-                    timeLeft--; 
-                    updateDisplay(); 
-                } else { 
+                if (timeLeft > 0) { timeLeft--; updateDisplay(); }
+                else { 
                     clearInterval(timerInterval); 
-                    isRunning = false; 
-                    // เล่นเสียง Beep
+                    isRunning = false;
                     document.getElementById('beep-sound').play();
-                    // เอฟเฟกต์เตือนด้วยสายตา (ตัวเลขแดง + กะพริบ)
-                    document.getElementById('time').style.color = '#ff4d4d';
-                    document.getElementById('time').classList.add('timer-blink');
                 }
             }, 1000);
         }
+        function pauseTimer() { clearInterval(timerInterval); isRunning = false; }
+        function finishTimer() { pauseTimer(); timeLeft = 0; updateDisplay(); }
 
-        function pauseTimer() { 
-            clearInterval(timerInterval); 
-            isRunning = false; 
-        }
-        
-        function resetTimer() { 
-            pauseTimer(); 
-            document.getElementById('time').style.color = '#fff';
-            document.getElementById('time').classList.remove('timer-blink');
-            const minInput = document.getElementById('customMinutes').value;
-            timeLeft = (minInput > 0 ? minInput : 25) * 60; 
-            updateDisplay(); 
-        }
-
-        // --- Sound Logic ---
+        // --- 3. Sound Logic ---
         function toggleSound(id, btn) {
             const audio = document.getElementById(id);
             if (audio.paused) { 
-                audio.play(); 
-                btn.textContent = 'Pause';
-                btn.style.background = '#ffeaa7';
+                audio.play(); btn.textContent = 'Pause'; btn.style.background = '#ffcc00'; btn.style.color = '#333';
             } else { 
-                audio.pause(); 
-                btn.textContent = 'Play';
-                btn.style.background = '#fff';
+                audio.pause(); btn.textContent = 'Play'; btn.style.background = 'rgba(255,255,255,0.2)'; btn.style.color = '#fff';
             }
         }
         function setVolume(id, vol) { document.getElementById(id).volume = vol; }
 
-        // --- To-do Logic ---
-        function addTask() {
-            const input = document.getElementById('taskInput');
-            if (input.value.trim() === "") return;
-            const li = document.createElement('li');
-            li.innerHTML = `
-                <div class="custom-checkbox"></div>
-                <span class="todo-text">${input.value}</span>
-                <button class="del-item-btn" onclick="this.parentElement.remove()">x</button>
-            `;
-            const toggle = () => li.classList.toggle('completed');
-            li.querySelector('.custom-checkbox').onclick = toggle;
-            li.querySelector('.todo-text').onclick = toggle;
-            document.getElementById('taskList').appendChild(li);
-            input.value = "";
-        }
-        function handleKeyPress(e) { if (e.key === 'Enter') addTask(); }
+        // --- 4. Calendar Logic ---
+        let currentMonth = new Date().getMonth();
+        let currentYear = new Date().getFullYear();
+        let selectedDateStr = "";
+        let tasks = JSON.parse(localStorage.getItem('studyCalendarTasks')) || {};
 
-        // --- Real-time Clock ---
-        function updateRealClock() {
-            const now = new Date();
-            const h = now.getHours().toString().padStart(2, '0');
-            const m = now.getMinutes().toString().padStart(2, '0');
-            const s = now.getSeconds().toString().padStart(2, '0');
-            document.getElementById('current-clock').textContent = `${h}:${m}:${s}`;
+        function renderCalendar() {
+            const grid = document.getElementById('calendarGrid');
+            const monthDisplay = document.getElementById('monthDisplay');
+            grid.innerHTML = '';
+            
+            const firstDay = new Date(currentYear, currentMonth, 1).getDay();
+            const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
+            const monthNames = ["มกราคม", "กุมภาพันธ์", "มีนาคม", "เมษายน", "พฤษภาคม", "มิถุนายน", "กรกฎาคม", "สิงหาคม", "กันยายน", "ตุลาคม", "พฤศจิกายน", "ธันวาคม"];
+            
+            monthDisplay.textContent = `${monthNames[currentMonth]} ${currentYear}`;
+
+            const days = ['อา', 'จ', 'อ', 'พ', 'พฤ', 'ศ', 'ส'];
+            days.forEach(d => {
+                const head = document.createElement('div');
+                head.className = 'calendar-day-head';
+                head.textContent = d;
+                grid.appendChild(head);
+            });
+
+            for (let i = 0; i < firstDay; i++) {
+                const empty = document.createElement('div');
+                empty.className = 'calendar-day';
+                grid.appendChild(empty);
+            }
+
+            for (let d = 1; d <= daysInMonth; d++) {
+                const dayEl = document.createElement('div');
+                dayEl.className = 'calendar-day';
+                const dateKey = `${currentYear}-${currentMonth + 1}-${d}`;
+                
+                if(new Date().toDateString() === new Date(currentYear, currentMonth, d).toDateString()) dayEl.classList.add('today');
+
+                dayEl.innerHTML = `<div class="day-number">${d}</div><div class="day-content"></div>`;
+                const content = dayEl.querySelector('.day-content');
+                
+                if(tasks[dateKey]) {
+                    tasks[dateKey].forEach(t => {
+                        const dot = document.createElement('div');
+                        dot.className = 'task-dot';
+                        dot.textContent = t;
+                        content.appendChild(dot);
+                    });
+                }
+
+                dayEl.onclick = () => openModal(dateKey);
+                grid.appendChild(dayEl);
+            }
         }
-        setInterval(updateRealClock, 1000);
-        updateRealClock();
+
+        function openModal(date) {
+            selectedDateStr = date;
+            document.getElementById('modalDate').textContent = date;
+            document.getElementById('taskModal').style.display = 'flex';
+            updateModalTaskList();
+        }
+
+        function saveTask() {
+            const val = document.getElementById('modalTaskInput').value.trim();
+            if(val) {
+                if(!tasks[selectedDateStr]) tasks[selectedDateStr] = [];
+                tasks[selectedDateStr].push(val);
+                localStorage.setItem('studyCalendarTasks', JSON.stringify(tasks));
+                document.getElementById('modalTaskInput').value = '';
+                updateModalTaskList();
+                renderCalendar();
+            }
+        }
+
+        function updateModalTaskList() {
+            const list = document.getElementById('modalTaskList');
+            list.innerHTML = '';
+            if(tasks[selectedDateStr]) {
+                tasks[selectedDateStr].forEach((t, i) => {
+                    list.innerHTML += `<div>- ${t}</div>`;
+                });
+            }
+        }
+
+        function closeModal() { document.getElementById('taskModal').style.display = 'none'; }
+        function prevMonth() { currentMonth--; if(currentMonth < 0) { currentMonth = 11; currentYear--; } renderCalendar(); }
+        function nextMonth() { currentMonth++; if(currentMonth > 11) { currentMonth = 0; currentYear++; } renderCalendar(); }
+
+        // --- Panel Toggle ---
+        function togglePanel(id) {
+            const panels = document.querySelectorAll('.panel');
+            panels.forEach(p => { if(p.id !== id) p.classList.remove('active'); });
+            document.getElementById(id).classList.toggle('active');
+        }
+
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                document.getElementById('intro-screen').style.opacity = '0';
+                setTimeout(() => document.getElementById('intro-screen').style.display = 'none', 1000);
+            }, 2000);
+            renderCalendar();
+            updateDisplay();
+        });
     </script>
 </body>
 </html>
